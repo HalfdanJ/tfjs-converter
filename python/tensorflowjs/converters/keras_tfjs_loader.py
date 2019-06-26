@@ -28,6 +28,8 @@ from tensorflow import keras
 
 from tensorflowjs import read_weights
 from tensorflowjs.converters import keras_h5_conversion
+from keras.layers import ReLU
+relu6 = ReLU(6.)
 
 
 def _deserialize_keras_model(model_topology_json,
@@ -59,10 +61,11 @@ def _deserialize_keras_model(model_topology_json,
     model_topology_json = model_topology_json['model_config']
   unique_name_scope = uuid.uuid4().hex if use_unique_name_scope else None
   with tf.compat.v1.name_scope(unique_name_scope):
-    if is_tf_keras:
-      model = keras.models.model_from_json(json.dumps(model_topology_json))
-    else:
-      model = keras.models.model_from_json(json.dumps(model_topology_json))
+    with CustomObjectScope({'relu6': relu6}):
+      if is_tf_keras:
+        model = keras.models.model_from_json(json.dumps(model_topology_json))
+      else:
+        model = keras.models.model_from_json(json.dumps(model_topology_json))
 
   if weight_entries:
     weights_dict = dict()
