@@ -30,7 +30,7 @@ from tensorflowjs import read_weights
 from tensorflowjs.converters import keras_h5_conversion
 from keras.layers import ReLU
 relu6 = ReLU(6.)
-
+from keras.utils.generic_utils import CustomObjectScope
 
 def _deserialize_keras_model(model_topology_json,
                              weight_entries=None,
